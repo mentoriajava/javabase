@@ -1,4 +1,4 @@
-name: Main CI
+name: Integracao Continua de Codigo
 
 on: [push]
 
@@ -18,7 +18,15 @@ jobs:
           path: ~/.m2
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
-      - name: Build with Maven
-        run: mvn -B package --file pom.xml
-      - name: Run the Maven verify phase
-        run: mvn -B verify --file pom.xml
+      - name: Valida Codigo
+        run: mvn -B validate --file pom.xml
+      - name: Compila Codigo
+        run: mvn -B clean compile --file pom.xml
+      - name: Checkstyle
+        run: mvn -B checkstyle:checkstyle -Dcheckstyle.skip=false --file pom.xml
+      - name: Testes Unitarios
+        run: mvn -B test --file pom.xml
+      - name: Testes Unitarios
+        run: mvn -B verify -P integration-test --file pom.xml
+      - name: Cobertura de Codigo
+        run: mvn -B clean verify -P all-tests --file pom.xml
