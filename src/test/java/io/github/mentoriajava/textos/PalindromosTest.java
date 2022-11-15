@@ -1,7 +1,10 @@
 package io.github.mentoriajava.textos;
 
+import java.util.stream.Stream;
+
 import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -9,24 +12,41 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @DisplayName("Testes Unitarios | Textos | Palindromo")
 class PalindromosTest {
 
-    final Palindromos palindromos = null;
+  final Palindromos palindromos = null;
+  @ParameterizedTest
+  @MethodSource("isAPalindrome")
+  @DisplayName("Palindromo")
+  void shouldReturnPalindrome(String value) {
+    assertTrue(palindromos.isPalindromo(value));
+  }
 
-    @DisplayName("Com espaco")
-    @Test
-    void shouldValidateSpacedWords(){
-        assertTrue(palindromos.isPalindromo("A nut for a jar of tuna"));
-        assertTrue(palindromos.isPalindromo("Al lets Della call Ed Stella"));
-        assertTrue(palindromos.isPalindromo("Borrow or rob"));
-        assertTrue(palindromos.isPalindromo("Taco cat"));
-    }
+  @ParameterizedTest
+  @MethodSource("isNotPalidrome")
+  @DisplayName("Sem Palindromos")
+  void shouldReturnNotPalidrome(String value) {
+    assertFalse(palindromos.isPalindromo(value));
+  }
 
-    @DisplayName("Sem Palindromos")
-    @Test
-    void shouldValidateNoPalindrome(){
-        assertFalse(palindromos.isPalindromo("A net for a jar of tona"));
-        assertFalse(palindromos.isPalindromo("Al leets Della call Ed Stella"));
-        assertFalse(palindromos.isPalindromo("Borrow nor rob"));
-        assertFalse(palindromos.isPalindromo("Take the cat"));
-    }
+  private static Stream<String> isNotPalidrome() {
+    return
+        Stream.of(
+            "A net for a jar of tona",
+            "Al leets Della call Ed Stella",
+            "Borrow nor rob",
+            "Take the cat",
+            "Abe",
+            "Eva"
+        );
+  }
+
+  private static Stream<String> isAPalindrome() {
+    return Stream.of(
+        "A nut for a jar of tuna",
+        "Al lets Della call Ed Stella",
+        "Borrow or rob",
+        "Taco cat",
+        "AbbA");
+
+  }
 
 }
